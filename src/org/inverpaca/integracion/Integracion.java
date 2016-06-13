@@ -117,7 +117,7 @@ public class Integracion extends Conecciones {
 					   query += ",ZFI_ANALISISCOST.GSTRP ";    // FECHA DE INICIO EXTREMA 
 					   query += ",ZFI_ANALISISCOST.INDIN ";    //
 					   query += ",CASE ";
-					   query += "   WHEN ZFI_ANALISISCOST.GLTRI ='00000000' THEN '29991231'";    // FECHA FIN REAL 
+					   query += "   WHEN ZFI_ANALISISCOST.GLTRI ='00000000' THEN '20991231'";    // FECHA FIN REAL 
 					   query += "   ELSE ZFI_ANALISISCOST.GLTRI ";
 					   query += " END GLTRI ";
 					   query += ",ZFI_ANALISISCOST.SORTB ";    //
