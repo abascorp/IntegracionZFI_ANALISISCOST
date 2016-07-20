@@ -7,9 +7,9 @@ public class Conecciones {
 	}
 	
 	//Variables para coneccion con BD BizView
-    private String bi_usuario = "obv6";
-    private String bi_clave = "obv6";
-    private String bi_url = "jdbc:oracle:thin:@10.10.7.10:1521:xe";
+    private String bi_usuario = "openbizview";
+    private String bi_clave = "openbizview";
+    private String bi_url = "jdbc:oracle:thin:@10.10.7.10:1521:bizview";
     private String bi_driver = "oracle.jdbc.OracleDriver"; //Driver
     
     //Variables para coneccion con BD Sybase

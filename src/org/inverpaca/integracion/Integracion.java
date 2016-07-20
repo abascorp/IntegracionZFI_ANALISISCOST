@@ -113,11 +113,10 @@ public class Integracion extends Conecciones {
 					   query += ",ZFI_ANALISISCOST.AUART ";    // Clase de orden
 					   query += ",ZFI_ANALISISCOST.WERKS ";    // Centro
 					   query += ",ZFI_ANALISISCOST.MATNR ";    // Numero del material
-					   query += ",MAKT.MAKTX";    // Descripcion del material
 					   query += ",ZFI_ANALISISCOST.GSTRP ";    // FECHA DE INICIO EXTREMA 
 					   query += ",ZFI_ANALISISCOST.INDIN ";    //
 					   query += ",CASE ";
-					   query += "   WHEN ZFI_ANALISISCOST.GLTRI ='00000000' THEN '20991231'";    // FECHA FIN REAL 
+					   query += "   WHEN ZFI_ANALISISCOST.GLTRI ='00000000' THEN '20551231'";    // FECHA FIN REAL 
 					   query += "   ELSE ZFI_ANALISISCOST.GLTRI ";
 					   query += " END GLTRI ";
 					   query += ",ZFI_ANALISISCOST.SORTB ";    //
@@ -139,14 +138,9 @@ public class Integracion extends Conecciones {
 					   query += "LEFT OUTER JOIN R3P.SAPSR3.DD07V DD07V ON ZFI_ANALISISCOST.BEWEG = DD07V.DOMVALUE_L ";
 					   query += "                                          AND DD07V.DDLANGUAGE = 'S' ";
 					   query += "                                          AND DD07V.DOMNAME = 'KKB_BEWEG' "; 
-					   query += "LEFT OUTER JOIN R3P.SAPSR3.MAKT  MAKT  ON ZFI_ANALISISCOST.MATNR = MAKT.MATNR ";
-					   query += "                                          AND MAKT.SPRAS = 'S' "; 
-					   query += "                                          AND MAKT.MANDT='400' ";  
-					   //query += "LEFT OUTER JOIN R3P.SAPSR3.AFKO AFKO   ON ZFI_ANALISISCOST.MANDANTE = AFKO.MANDT ";
-					   //query += "                                          AND ZFI_ANALISISCOST.AUFNR = AFKO.AUFNR ";
-					   //query += "WHERE ZFI_ANALISISCOST.ERDAT = '20160524'"; //CONVERT(VARCHAR,DATEADD(dd,-1,GETDATE()),112)";
+					   query += "WHERE ZFI_ANALISISCOST.GSTRP >= CONVERT(VARCHAR,DATEADD(dd,-45,GETDATE()),112) ";
 
-					   System.out.println(query);
+					   //System.out.println(query);
            
 					   try{
            rs = stmt.executeQuery(query);
@@ -165,7 +159,8 @@ public class Integracion extends Conecciones {
            while (rs.next()){
                for (int j = 0; j < columns; j++)
 				arr [i][j] = rs.getString(j+1);
-              /* System.out.println(arr[i][0]+","+arr[i][1]+","+arr[i][2]+","+arr[i][3]+","+arr[i][4]+","+arr[i][5]+","+arr[i][6]+","+arr[i][7]+","+arr[i][8]+","+arr[i][9]+","+arr[i][10]+","+arr[i][11]+","+arr[i][12]+","+arr[i][13]+","+
+                i++;
+               /*System.out.println(arr[i][0]+","+arr[i][1]+","+arr[i][2]+","+arr[i][3]+","+arr[i][4]+","+arr[i][5]+","+arr[i][6]+","+arr[i][7]+","+arr[i][8]+","+arr[i][9]+","+arr[i][10]+","+arr[i][11]+","+arr[i][12]+","+arr[i][13]+","+
 				                  arr[i][14]+","+
 				                  arr[i][15]+","+
 				                  arr[i][16]+","+
@@ -176,10 +171,9 @@ public class Integracion extends Conecciones {
 				                  arr[i][21]+","+
 				                  arr[i][22]+","+
 				                  arr[i][23]+","+
-				                  arr[i][24]+","+
-				                  arr[i][25]+".");  */
-               
-				i++;
+				                  arr[i][25]+"."); 
+               */
+				
               }
                    } catch (SQLException e) {
                    e.printStackTrace();
@@ -217,12 +211,12 @@ public class Integracion extends Conecciones {
 	    Integracion q = new Integracion();
 		
 	    String
-	    qryDelete = "DELETE BI_ZFI_ANALISISCOST WHERE ERDAT >= SYSDATE -1 ";
+	    qryDelete = "DELETE ZFI_ANALISISCOST WHERE ERDAT >= SYSDATE -45 ";
 	    
 	    QueryGenericThread thd;
         thd = new QueryGenericThread(qryDelete, ds); //Insert Generic
         ex.execute(thd);
-        Thread.sleep(1500);
+        Thread.sleep(1);
         System.out.println("DELETE EJECUTADO.");
 	    
 	    q.selectZFI_ANALISISCOST();
@@ -232,7 +226,7 @@ public class Integracion extends Conecciones {
         //Inicia el Ciclo For
 	    for (int i = 0; i < rows; i++) {
 	    String 
-    	qryInsert  = "INSERT INTO BI_ZFI_ANALISISCOST values (" 
+    	qryInsert  = "INSERT INTO ZFI_ANALISISCOST values (" 
 				+ "'" + tabla[i][0] + "', "
 				+ "TO_DATE('" + tabla[i][1] + "','YYYYMMDD'), "
 				+ "'" + tabla[i][2] + "', "
@@ -240,38 +234,34 @@ public class Integracion extends Conecciones {
 				+ "'" + tabla[i][4] + "', "
 				+ "'" + tabla[i][5] + "', "
 				+ "'" + tabla[i][6] + "', "
-				+ "'" + tabla[i][7] + "', "
-				+ "TO_DATE('" + tabla[i][8] + "','YYYYMMDD'), "
-				+ "'" + tabla[i][9] + "', "
-				+ "TO_DATE('" + tabla[i][10] + "','YYYYMMDD'), "
+				+ "TO_DATE('" + tabla[i][7] + "','YYYYMMDD'), "
+				+ "'" + tabla[i][8] + "', "
+				+ "TO_DATE('" + tabla[i][9] + "','YYYYMMDD'), "
+				+ "'" + tabla[i][10] + "', "
 				+ "'" + tabla[i][11] + "', "
 				+ "'" + tabla[i][12] + "', "
 				+ "'" + tabla[i][13] + "', "
-				+ "'" + tabla[i][14] + "', "
+				+ "'" + tabla[i][14].replace("'", "") + "', "
 				+ "'" + tabla[i][15] + "', "
 				+ "'" + tabla[i][16] + "', "
-				+ "'" + tabla[i][17] + "', "
+				+ tabla[i][17] + ", "
 				+ tabla[i][18] + ", "
 				+ tabla[i][19] + ", "
 				+ tabla[i][20] + ", "
 				+ tabla[i][21] + ", "
 				+ tabla[i][22] + ", "
 				+ tabla[i][23] + ", "
-				+ tabla[i][24] + ", "
-				+ tabla[i][25] + ")";
+				+ tabla[i][24] + ")";
         
-    	 //System.out.println(qryInsert);
-    			 
-    		 
-    	 QueryGenericThread th;
+    	 //System.out.println(qryInsert);    			     		
+	             
+       	 QueryGenericThread th;
          th = new QueryGenericThread(qryInsert, ds); //Insert Generic
          ex.execute(th);
-         Thread.sleep(1500);
-	    
-         //System.out.println(qryInsert);         
-	    
+         Thread.sleep(1);
+         
 	    } // Fin del loop for
-	            
+     
 	    if(rows==0){
         msj = "ZFI_ANALISISCOST" + " : Lectura de datos no realizada, no se encontraron registros";
         insertLog(msj, "error", "ZFI_ANALISISCOST");
@@ -321,9 +311,10 @@ public class Integracion extends Conecciones {
 	a.insertDatos();
 	System.out.println("FIN ZFI_ANALISISCOST");
 	
-
-	
-	System.out.println("FIN");
+     {
+        System.exit(0);
+    }
+	            
 	}
 	
 }

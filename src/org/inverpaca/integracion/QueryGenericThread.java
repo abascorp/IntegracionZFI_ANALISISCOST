@@ -47,7 +47,7 @@ public class QueryGenericThread extends Thread {
 	      } catch (Exception e) {
 	         // tratamiento de error
 	    	  System.out.println("Error en Thread : " + e.getMessage());
-	    	  new Integracion().insertLog("Error en Thread - " + e.getMessage(),"error", "INVERPACA");
+	    	  new Integracion().insertLog("Error en Thread - " + e.getMessage(),"error", "ZFI_ANALISISCOST");
 	    	  System.exit(0);
 	    	  
 	      } finally {
