@@ -106,41 +106,46 @@ public class Integracion extends Conecciones {
               		ResultSet.TYPE_SCROLL_INSENSITIVE,
                     	ResultSet.CONCUR_READ_ONLY);
 					   String query  = "SELECT ";
-					   query += "ZFI_ANALISISCOST.MANDANTE "; // Mandante
-					   query += ",ZFI_ANALISISCOST.ERDAT ";    // Fecha de registro
-					   query += ",ZFI_ANALISISCOST.ERZET ";    // Hora de registro
-					   query += ",ZFI_ANALISISCOST.AUFNR ";    // Numero de Orden
-					   query += ",ZFI_ANALISISCOST.AUART ";    // Clase de orden
-					   query += ",ZFI_ANALISISCOST.WERKS ";    // Centro
-					   query += ",ZFI_ANALISISCOST.MATNR ";    // Numero del material
-					   query += ",ZFI_ANALISISCOST.GSTRP ";    // FECHA DE INICIO EXTREMA 
-					   query += ",ZFI_ANALISISCOST.INDIN ";    //
+					   query += "ZFI_ANALISISCOST.MANDANTE ";  //0  Mandante
+					   query += ",ZFI_ANALISISCOST.ERDAT ";    //1  Fecha de registro
+					   query += ",ZFI_ANALISISCOST.ERZET ";    //2  Hora de registro
+					   query += ",ZFI_ANALISISCOST.AUFNR ";    //3  Numero de Orden
+					   query += ",ZFI_ANALISISCOST.AUART ";    //4  Clase de orden
+					   query += ",ZFI_ANALISISCOST.WERKS ";    //5  Centro
+					   query += ",ZFI_ANALISISCOST.MATNR ";    //6  Numero del material
+					   query += ",MAKT.MAKTX ";                //7  DESCRIPCION DEL MATERIAL                        ***************** hacer replace (07)
+					   query += ",ZFI_ANALISISCOST.GSTRP ";    //8  FECHA DE INICIO EXTREMA 
+					   query += ",ZFI_ANALISISCOST.INDIN ";    //9
 					   query += ",CASE ";
-					   query += "   WHEN ZFI_ANALISISCOST.GLTRI ='00000000' THEN '20551231'";    // FECHA FIN REAL 
+					   query += "   WHEN ZFI_ANALISISCOST.GLTRI ='00000000' THEN '20991231'";     
 					   query += "   ELSE ZFI_ANALISISCOST.GLTRI ";
-					   query += " END GLTRI ";
-					   query += ",ZFI_ANALISISCOST.SORTB ";    //
-					   query += ",ZFI_ANALISISCOST.BEWEG ";    // Operación empresarial en órdenes de producción
-					   query += ",DD07V.DDTEXT";  // Texto de operación empresarial
-					   query += ",ZFI_ANALISISCOST.HERKU ";    // 
-					   query += ",ZFI_ANALISISCOST.KTEXT ";    // Texto breve p.característica KKBCS
-					   query += ",ZFI_ANALISISCOST.MEINH ";    // Unidad de medida de la cantidad de producción
-					   query += ",ZFI_ANALISISCOST.TWAER ";    // Clave de moneda
-					   query += ",ZFI_ANALISISCOST.MEGXP ";    // Cantidad plan total
-					   query += ",ZFI_ANALISISCOST.WTMGP ";    // Valor total en moneda de transacción
-					   query += ",ZFI_ANALISISCOST.WTGXP ";    // Total de costes plan
-					   query += ",ZFI_ANALISISCOST.MEGXR ";    // Cantidad real total
-					   query += ",ZFI_ANALISISCOST.WTMGR ";    // Valor total en moneda de transacción
-					   query += ",ZFI_ANALISISCOST.WTGXR ";    // Total de costes reales
-					   query += ",ZFI_ANALISISCOST.PKSTA ";    // Desviación de costes plan/real absoluta
-					   query += ",ZFI_ANALISISCOST.PKSTP ";    // Desviación de costes plan/real en porcentaje
+					   query += " END GLTRI ";                 //10 FECHA FIN REAL
+					   query += ",ZFI_ANALISISCOST.SORTB ";    //11
+					   query += ",ZFI_ANALISISCOST.BEWEG ";    //12 Operación empresarial en órdenes de producción
+					   query += ",DD07V.DDTEXT";               //13 Texto de operación empresarial
+					   query += ",ZFI_ANALISISCOST.HERKU ";    //14 
+					   query += ",ZFI_ANALISISCOST.KTEXT ";    //15 Texto breve p.característica KKBCS              ***************** hacer replace (15)
+					   query += ",ZFI_ANALISISCOST.MEINH ";    //16 Unidad de medida de la cantidad de producción
+					   query += ",ZFI_ANALISISCOST.TWAER ";    //17 Clave de moneda
+					   query += ",ZFI_ANALISISCOST.MEGXP ";    //18 Cantidad plan total
+					   query += ",ZFI_ANALISISCOST.WTMGP ";    //19 Valor total en moneda de transacción
+					   query += ",ZFI_ANALISISCOST.WTGXP ";    //20 Total de costes plan
+					   query += ",ZFI_ANALISISCOST.MEGXR ";    //21 Cantidad real total
+					   query += ",ZFI_ANALISISCOST.WTMGR ";    //22 Valor total en moneda de transacción
+					   query += ",ZFI_ANALISISCOST.WTGXR ";    //23 Total de costes reales
+					   query += ",ZFI_ANALISISCOST.PKSTA ";    //24 Desviación de costes plan/real absoluta
+					   query += ",ZFI_ANALISISCOST.PKSTP ";    //25 Desviación de costes plan/real en porcentaje
 					   query += "FROM R3P.SAPSR3.ZFI_ANALISISCOST ZFI_ANALISISCOST ";
 					   query += "LEFT OUTER JOIN R3P.SAPSR3.DD07V DD07V ON ZFI_ANALISISCOST.BEWEG = DD07V.DOMVALUE_L ";
 					   query += "                                          AND DD07V.DDLANGUAGE = 'S' ";
 					   query += "                                          AND DD07V.DOMNAME = 'KKB_BEWEG' "; 
-					   query += "WHERE ZFI_ANALISISCOST.GSTRP >= CONVERT(VARCHAR,DATEADD(dd,-45,GETDATE()),112) ";
+					   query += "LEFT OUTER JOIN R3P.SAPSR3.MAKT MAKT ON ZFI_ANALISISCOST.MATNR = MAKT.MATNR ";
+					   query += "                                        AND ZFI_ANALISISCOST.MANDANTE = MAKT.MANDT ";
+					   query += "                                        AND MAKT.SPRAS = 'S' ";
+					   //query += "WHERE ZFI_ANALISISCOST.GSTRP >= CONVERT(VARCHAR,DATEADD(dd,-45,GETDATE()),112) ";
+					   //query += "WHERE ZFI_ANALISISCOST.AUFNR = '058000002018'";
 
-					   //System.out.println(query);
+					   System.out.println(query);
            
 					   try{
            rs = stmt.executeQuery(query);
@@ -234,26 +239,27 @@ public class Integracion extends Conecciones {
 				+ "'" + tabla[i][4] + "', "
 				+ "'" + tabla[i][5] + "', "
 				+ "'" + tabla[i][6] + "', "
-				+ "TO_DATE('" + tabla[i][7] + "','YYYYMMDD'), "
-				+ "'" + tabla[i][8] + "', "
-				+ "TO_DATE('" + tabla[i][9] + "','YYYYMMDD'), "
-				+ "'" + tabla[i][10] + "', "
+				+ "'" + tabla[i][7].replace("'", "") + "', "
+				+ "TO_DATE('" + tabla[i][8] + "','YYYYMMDD'), "
+				+ "'" + tabla[i][9] + "', "
+				+ "TO_DATE('" + tabla[i][10] + "','YYYYMMDD'), "
 				+ "'" + tabla[i][11] + "', "
 				+ "'" + tabla[i][12] + "', "
 				+ "'" + tabla[i][13] + "', "
-				+ "'" + tabla[i][14].replace("'", "") + "', "
-				+ "'" + tabla[i][15] + "', "
+				+ "'" + tabla[i][14] + "', "
+				+ "'" + tabla[i][15].replace("'", "") + "', "
 				+ "'" + tabla[i][16] + "', "
-				+ tabla[i][17] + ", "
+				+ "'" + tabla[i][17] + "', "
 				+ tabla[i][18] + ", "
 				+ tabla[i][19] + ", "
 				+ tabla[i][20] + ", "
 				+ tabla[i][21] + ", "
 				+ tabla[i][22] + ", "
 				+ tabla[i][23] + ", "
-				+ tabla[i][24] + ")";
+				+ tabla[i][24] + ", "
+				+ tabla[i][25] + ")";
         
-    	 //System.out.println(qryInsert);    			     		
+    	 System.out.println(qryInsert);    			     		
 	             
        	 QueryGenericThread th;
          th = new QueryGenericThread(qryInsert, ds); //Insert Generic
