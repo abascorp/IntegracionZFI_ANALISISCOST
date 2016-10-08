@@ -64,12 +64,12 @@ public class Integracion extends Conecciones {
             PreparedStatement pstmt = null;
             //Class.forName(getDriver());
             //con = DriverManager.getConnection(
-              //    getUrl(), getUsuario(), getClave());
+            //getUrl(), getUsuario(), getClave());
             String query = "INSERT INTO BIAUDIT VALUES ('" + fecha + "','" + detfaz + "','" + estatus + "','" + area + "',TO_DATE('" + fechadia + "','dd/MM/yyyy'),'1')";
             pstmt = con.prepareStatement(query);
             System.out.println(query);
             try {
-                //Avisando
+             //Avisando
                 pstmt.executeUpdate();
                 System.out.println("Se ha insertado registro en el log");
             } catch (SQLException e)  {
@@ -105,10 +105,10 @@ public class Integracion extends Conecciones {
            stmt = con.createStatement(
               		ResultSet.TYPE_SCROLL_INSENSITIVE,
                     	ResultSet.CONCUR_READ_ONLY);
-					   String query  = "SELECT ";
+					   String query  = "SELECT DISTINCT ";
 					   query += "ZFI_ANALISISCOST.MANDANTE ";  //0  Mandante
-					   query += ",ZFI_ANALISISCOST.ERDAT ";    //1  Fecha de registro
-					   query += ",ZFI_ANALISISCOST.ERZET ";    //2  Hora de registro
+					   query += ",'00000000' ERDAT ";    //1  Fecha de registro
+					   query += ",'000000' ERZET ";    //2  Hora de registro
 					   query += ",ZFI_ANALISISCOST.AUFNR ";    //3  Numero de Orden
 					   query += ",ZFI_ANALISISCOST.AUART ";    //4  Clase de orden
 					   query += ",ZFI_ANALISISCOST.WERKS ";    //5  Centro
@@ -135,6 +135,8 @@ public class Integracion extends Conecciones {
 					   query += ",ZFI_ANALISISCOST.WTGXR ";    //23 Total de costes reales
 					   query += ",ZFI_ANALISISCOST.PKSTA ";    //24 Desviación de costes plan/real absoluta
 					   query += ",ZFI_ANALISISCOST.PKSTP ";    //25 Desviación de costes plan/real en porcentaje
+					   query += ",0 ANOCAL ";                  //26 Año de calculo segun rango de ordenes
+					   query += ",0 MESCAL ";                  //27 Mes de calculo segun rango de ordenes
 					   query += "FROM R3P.SAPSR3.ZFI_ANALISISCOST ZFI_ANALISISCOST ";
 					   query += "LEFT OUTER JOIN R3P.SAPSR3.DD07V DD07V ON ZFI_ANALISISCOST.BEWEG = DD07V.DOMVALUE_L ";
 					   query += "                                          AND DD07V.DDLANGUAGE = 'S' ";
@@ -142,8 +144,8 @@ public class Integracion extends Conecciones {
 					   query += "LEFT OUTER JOIN R3P.SAPSR3.MAKT MAKT ON ZFI_ANALISISCOST.MATNR = MAKT.MATNR ";
 					   query += "                                        AND ZFI_ANALISISCOST.MANDANTE = MAKT.MANDT ";
 					   query += "                                        AND MAKT.SPRAS = 'S' ";
-					   //query += "WHERE ZFI_ANALISISCOST.GSTRP >= CONVERT(VARCHAR,DATEADD(dd,-45,GETDATE()),112) ";
-					   //query += "WHERE ZFI_ANALISISCOST.AUFNR = '058000002018'";
+					   //query += "WHERE SUBSTRING(ZFI_ANALISISCOST.GSTRP,1,4) >= SUBSTRING(CONVERT(VARCHAR,GETDATE(),112),1,4) ";
+					   //query += "WHERE ZFI_ANALISISCOST.AUFNR = '050000000826'";
 
 					   System.out.println(query);
            
@@ -216,7 +218,7 @@ public class Integracion extends Conecciones {
 	    Integracion q = new Integracion();
 		
 	    String
-	    qryDelete = "DELETE ZFI_ANALISISCOST WHERE ERDAT >= SYSDATE -45 ";
+	    qryDelete = "DELETE ZFI_ANALISISCOST"; // WHERE TO_CHAR(GSTRP,'YYYY') >= TO_CHAR(SYSDATE,'YYYY')";
 	    
 	    QueryGenericThread thd;
         thd = new QueryGenericThread(qryDelete, ds); //Insert Generic
@@ -233,7 +235,7 @@ public class Integracion extends Conecciones {
 	    String 
     	qryInsert  = "INSERT INTO ZFI_ANALISISCOST values (" 
 				+ "'" + tabla[i][0] + "', "
-				+ "TO_DATE('" + tabla[i][1] + "','YYYYMMDD'), "
+				+ "'" + tabla[i][1] + "', "
 				+ "'" + tabla[i][2] + "', "
 				+ "'" + tabla[i][3] + "', "
 				+ "'" + tabla[i][4] + "', "
@@ -257,7 +259,9 @@ public class Integracion extends Conecciones {
 				+ tabla[i][22] + ", "
 				+ tabla[i][23] + ", "
 				+ tabla[i][24] + ", "
-				+ tabla[i][25] + ")";
+				+ tabla[i][25] + ", "
+				+ tabla[i][26] + ", "								
+				+ tabla[i][27] + ")";
         
     	 System.out.println(qryInsert);    			     		
 	             
